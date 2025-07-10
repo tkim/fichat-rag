@@ -1,4 +1,4 @@
-# FI-Chat RAG Framework
+# fiChat RAG Framework
 
 A standalone, production-ready Retrieval-Augmented Generation (RAG) framework extracted from FI-Chat. This framework provides a flexible and efficient solution for building RAG applications with support for local LLMs via Ollama.
 
