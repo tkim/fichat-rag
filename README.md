@@ -92,7 +92,6 @@ The framework is organized into modular components:
 ## Supported LLMs
 
 - Ollama (all models)
-- OpenAI (GPT-3.5, GPT-4)
 - Custom LLM providers (implement the base interface)
 
 ## Supported Vector Stores
