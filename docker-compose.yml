@@ -1,0 +1,113 @@
+version: '3.8'
+
+services:
+  # Ollama for local LLM
+  ollama:
+    image: ollama/ollama:latest
+    container_name: fichat-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    environment:
+      - OLLAMA_KEEP_ALIVE=24h
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    command: serve
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # PostgreSQL with pgvector
+  postgres:
+    image: pgvector/pgvector:pg15
+    container_name: fichat-postgres
+    environment:
+      POSTGRES_DB: fichat_rag
+      POSTGRES_USER: rag_user
+      POSTGRES_PASSWORD: rag_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rag_user -d fichat_rag"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Optional: MinIO for S3-compatible object storage
+  minio:
+    image: minio/minio:latest
+    container_name: fichat-minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  # RAG API service
+  rag-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fichat-rag-api
+    ports:
+      - "8000:8000"
+    environment:
+      - LLM_PROVIDER=ollama
+      - LLM_MODEL=llama2
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=fichat_rag
+      - POSTGRES_USER=rag_user
+      - POSTGRES_PASSWORD=rag_pass
+      - VECTOR_STORE_TYPE=postgres
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./src:/app/src
+      - ./examples:/app/examples
+      - ./data:/app/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy
+    command: uvicorn src.api:app --host 0.0.0.0 --port 8000 --reload
+
+  # Optional: Jupyter notebook for experimentation
+  jupyter:
+    image: jupyter/scipy-notebook:latest
+    container_name: fichat-jupyter
+    ports:
+      - "8888:8888"
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+    volumes:
+      - ./notebooks:/home/jovyan/work
+      - ./src:/home/jovyan/work/src
+      - ./examples:/home/jovyan/work/examples
+    command: start-notebook.sh --NotebookApp.token='' --NotebookApp.password=''
+
+volumes:
+  ollama_data:
+  postgres_data:
+  minio_data:
