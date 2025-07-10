@@ -18,7 +18,7 @@ A standalone, production-ready Retrieval-Augmented Generation (RAG) framework ex
 
 ### Operating System Support
 
-FI-Chat RAG is a cross-platform framework that runs on:
+fiChat RAG is a cross-platform framework that runs on:
 - **Linux** (Ubuntu 20.04+, Debian 10+, RHEL 8+, and other modern distributions)
 - **Windows** (Windows 10/11 with native Python or WSL2)
 - **macOS** (macOS 10.15 Catalina or later, including Apple Silicon)
@@ -69,7 +69,7 @@ FI-Chat RAG is a cross-platform framework that runs on:
    nmake /f Makefile.win install
    ```
 
-3. **Install FI-Chat RAG**:
+3. **Install fiChat RAG**:
    ```powershell
    # Create virtual environment
    python -m venv fichat-env
@@ -108,7 +108,7 @@ FI-Chat RAG is a cross-platform framework that runs on:
    sudo apt install postgresql postgresql-contrib
    sudo apt install postgresql-15-pgvector
 
-   # Install FI-Chat RAG
+   # Install fiChat RAG
    pip install fichat-rag[all]
    ```
 
@@ -128,7 +128,7 @@ FI-Chat RAG is a cross-platform framework that runs on:
    brew install pgvector
    ```
 
-3. **Install FI-Chat RAG**:
+3. **Install fiChat RAG**:
    ```bash
    # Create virtual environment
    python3 -m venv fichat-env
@@ -162,7 +162,7 @@ FI-Chat RAG is a cross-platform framework that runs on:
    pip install torch torchvision torchaudio
    ```
 
-3. **Install FI-Chat RAG**:
+3. **Install fiChat RAG**:
    ```bash
    # Ensure using ARM64 Python
    python3 -m venv fichat-env
@@ -504,4 +504,4 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 ## Acknowledgments
 
-This framework is extracted from [FI-Chat](https://github.com/yourusername/FI-Chat), a production financial chat application.
+This framework is extracted from [fiChat](https://github.com/yourusername/fiChat), a production financial chat application.

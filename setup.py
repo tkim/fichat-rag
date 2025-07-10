@@ -10,8 +10,8 @@ long_description = (this_directory / "README.md").read_text()
 setup(
     name="fichat-rag",
     version="0.1.0",
-    author="FI-Chat Team",
-    description="A production-ready RAG framework extracted from FI-Chat",
+    author="fiChat Team",
+    description="A production-ready RAG framework extracted from fiChat",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/yourusername/fichat-rag",

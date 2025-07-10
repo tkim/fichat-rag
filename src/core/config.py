@@ -1,4 +1,4 @@
-"""Configuration management for FI-Chat RAG."""
+"""Configuration management for fiChat RAG."""
 
 import os
 from typing import Optional, Dict, Any
@@ -8,7 +8,7 @@ from pathlib import Path
 
 @dataclass
 class Config:
-    """Main configuration class for FI-Chat RAG."""
+    """Main configuration class for fiChat RAG."""
     
     # LLM settings
     llm_provider: str = "ollama"

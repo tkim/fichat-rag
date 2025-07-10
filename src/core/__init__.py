@@ -1,4 +1,4 @@
-"""Core components of the FI-Chat RAG framework."""
+"""Core components of the fiChat RAG framework."""
 
 from .config import Config
 from .rag import RAG

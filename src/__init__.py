@@ -1,4 +1,4 @@
-"""FI-Chat RAG Framework - A production-ready RAG solution."""
+"""fiChat RAG Framework - A production-ready RAG solution."""
 
 from .core import RAG, Config
 from .core.llm import BaseLLM, OllamaLLM, OpenAILLM
