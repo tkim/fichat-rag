@@ -44,6 +44,7 @@ setup(
     ],
     extras_require={
         "pdf": ["PyPDF2>=3.0.0", "pdfplumber>=0.10.0"],
+        "web": ["firecrawl-py>=0.0.14"],
         "chromadb": ["chromadb>=0.4.0"],
         "qdrant": ["qdrant-client>=1.7.0"],
         "dev": [
@@ -55,9 +56,11 @@ setup(
         "all": [
             "PyPDF2>=3.0.0",
             "pdfplumber>=0.10.0",
+            "firecrawl-py>=0.0.14",
             "chromadb>=0.4.0",
             "qdrant-client>=1.7.0",
             "langdetect>=1.0.9",
+            "pyyaml>=6.0",
         ],
     },
     entry_points={

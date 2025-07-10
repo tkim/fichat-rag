@@ -118,8 +118,56 @@ Key configurations:
 - `VECTOR_STORE_TYPE`: Choose between "postgres", "memory", or "chromadb"
 - `EMBEDDING_MODEL`: Sentence transformer model to use
 
+## Web Scraping
+
+FI-Chat RAG includes Firecrawl integration for web content extraction.
+
+### Setup
+
+1. Get a Firecrawl API key from [firecrawl.dev](https://firecrawl.dev)
+2. Set the environment variable:
+   ```bash
+   export FIRECRAWL_API_KEY="your-api-key"
+   ```
+
+### Basic Web Scraping
+
+```python
+# Add web pages directly
+rag.add_documents([
+    "https://example.com/article",
+    "https://docs.example.com/guide"
+])
+
+# Query the scraped content
+response = rag.query("What does the article say about AI?")
+```
+
+### Advanced Web Scraping
+
+```python
+from fichat_rag.ingestion.loaders import FirecrawlLoader
+
+# Create a loader with custom options
+loader = FirecrawlLoader(
+    formats=["markdown"],
+    only_main_content=True,
+    screenshot=True
+)
+
+# Scrape a single page
+doc = loader.load("https://example.com")
+
+# Crawl an entire website
+docs = loader.crawl("https://docs.example.com", limit=20)
+
+# Map website structure
+urls = loader.map_website("https://example.com")
+```
+
 ## Next Steps
 
 - Check out the [examples](../examples) directory
+- Try the [web_scraping.py](../examples/web_scraping.py) example
 - Read the [API Reference](./api-reference.md)
 - Learn about [Advanced Usage](./advanced-usage.md)

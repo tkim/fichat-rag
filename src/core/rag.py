@@ -12,7 +12,7 @@ from ..storage.postgres_vector import PostgresVectorStore
 from ..storage.memory import InMemoryVectorStore
 from ..ingestion.chunkers import SemanticChunker, BaseChunker
 from ..ingestion.processors import DocumentProcessor
-from ..ingestion.loaders import PDFLoader, TextLoader
+from ..ingestion.loaders import PDFLoader, TextLoader, MarkdownLoader, JSONLoader, WebLoader
 from ..retrieval.retriever import HybridRetriever, BaseRetriever
 from ..retrieval.reranker import CrossEncoderReranker, BaseReranker
 from ..generation.generator import ResponseGenerator
@@ -60,9 +60,13 @@ class RAG:
             'pdf': PDFLoader(),
             'txt': TextLoader(),
             'text': TextLoader(),
-            'md': TextLoader(),
-            'markdown': TextLoader(),
+            'md': MarkdownLoader(),
+            'markdown': MarkdownLoader(),
+            'json': JSONLoader(),
         }
+        
+        # Web loader (lazy initialization)
+        self._web_loader = None
     
     def _create_llm(self) -> BaseLLM:
         """Create LLM based on config."""
@@ -203,7 +207,11 @@ class RAG:
         file_path: str,
         metadata: Optional[Dict[str, Any]] = None
     ) -> List[Document]:
-        """Load documents from file."""
+        """Load documents from file or URL."""
+        # Check if it's a URL
+        if file_path.startswith(('http://', 'https://')):
+            return self._load_web_documents(file_path, metadata)
+        
         path = Path(file_path)
         
         if not path.exists():
@@ -221,6 +229,36 @@ class RAG:
         
         # Load document
         doc_data = loader.load(file_path)
+        
+        # Merge metadata
+        doc_metadata = {**doc_data['metadata'], **(metadata or {})}
+        
+        # Create document
+        document = Document(
+            content=doc_data['content'],
+            metadata=doc_metadata
+        )
+        
+        return [document]
+    
+    def _load_web_documents(
+        self,
+        url: str,
+        metadata: Optional[Dict[str, Any]] = None
+    ) -> List[Document]:
+        """Load documents from web URL."""
+        # Initialize web loader if needed
+        if self._web_loader is None:
+            try:
+                self._web_loader = WebLoader(backend="firecrawl")
+            except Exception as e:
+                raise RuntimeError(
+                    f"Failed to initialize web loader: {e}. "
+                    "Make sure FIRECRAWL_API_KEY is set and firecrawl-py is installed."
+                )
+        
+        # Load from URL
+        doc_data = self._web_loader.load(url)
         
         # Merge metadata
         doc_metadata = {**doc_data['metadata'], **(metadata or {})}

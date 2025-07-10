@@ -22,10 +22,14 @@ chardet>=5.0.0
 PyPDF2>=3.0.0
 # pdfplumber>=0.10.0  # Alternative PDF library
 
+# Optional: Web scraping
+firecrawl-py>=0.0.14  # For Firecrawl web scraping
+
 # Optional: Advanced features
 # chromadb>=0.4.0  # For ChromaDB support
 # qdrant-client>=1.7.0  # For Qdrant support
 # langdetect>=1.0.9  # For language detection
+pyyaml>=6.0  # For YAML parsing (markdown frontmatter)
 
 # Development
 pytest>=7.0.0

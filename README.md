@@ -9,6 +9,7 @@ A standalone, production-ready Retrieval-Augmented Generation (RAG) framework ex
 - 📊 **Multiple Vector Stores**: PostgreSQL with pgvector, ChromaDB, Qdrant
 - 🔍 **Hybrid Search**: Combines vector similarity and keyword search
 - 📄 **Advanced Document Processing**: Semantic chunking with configurable strategies
+- 🌐 **Web Scraping**: Firecrawl integration for web content extraction
 - 🎯 **Reranking**: Cross-encoder based reranking for improved relevance
 - 🐳 **Docker Support**: Easy local setup with Docker Compose
 - ⚡ **Async Operations**: High-performance async/await patterns
@@ -33,12 +34,39 @@ rag = RAG(
     embedding_model="sentence-transformers/all-MiniLM-L6-v2"
 )
 
-# Add documents
+# Add documents from files
 rag.add_documents(["document.pdf", "data.json"])
+
+# Add documents from web
+rag.add_documents(["https://example.com/article"])
 
 # Query
 response = rag.query("What are the key findings?")
 print(response)
+```
+
+### Web Scraping with Firecrawl
+
+```python
+from fichat_rag import RAG
+from fichat_rag.ingestion.loaders import FirecrawlLoader
+
+# Set your Firecrawl API key
+os.environ["FIRECRAWL_API_KEY"] = "your-api-key"
+
+# Initialize RAG
+rag = RAG()
+
+# Scrape and add web content
+rag.add_documents([
+    "https://docs.example.com/guide",
+    "https://blog.example.com/article"
+])
+
+# Or use the loader directly for more control
+loader = FirecrawlLoader()
+pages = loader.crawl("https://docs.example.com", limit=10)
+rag.add_documents(pages)
 ```
 
 ### Docker Setup
