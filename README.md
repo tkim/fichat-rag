@@ -4,8 +4,8 @@ A standalone, production-ready Retrieval-Augmented Generation (RAG) framework ex
 
 ## Features
 
-- 🚀 **Production-Ready**: Battle-tested components from FI-Chat
-- 🔧 **Flexible LLM Support**: Built-in Ollama integration, OpenAI, and custom providers
+- 🚀 **Production-Ready**: Battle-tested components from fiChat
+- 🔧 **Flexible LLM Support**: Built-in Ollama integration, and custom providers
 - 📊 **Multiple Vector Stores**: PostgreSQL with pgvector, ChromaDB, Qdrant
 - 🔍 **Hybrid Search**: Combines vector similarity and keyword search
 - 📄 **Advanced Document Processing**: Semantic chunking with configurable strategies
