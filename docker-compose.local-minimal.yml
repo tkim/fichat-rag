@@ -1,0 +1,50 @@
+version: '3.8'
+
+# Minimal local deployment with SQLite and Ollama
+# Perfect for development and small deployments
+
+services:
+  fichat-minimal:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fichat-minimal
+    ports:
+      - "8000:8000"
+    environment:
+      # LLM Configuration - Using host's Ollama
+      - LLM_PROVIDER=ollama
+      - LLM_MODEL=phi  # Small model for minimal setup
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      
+      # Vector Store - SQLite (file-based)
+      - VECTOR_STORE_TYPE=sqlite
+      - SQLITE_DB_PATH=/app/data/fichat.db
+      
+      # Embeddings - Lightweight model
+      - EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
+      - EMBEDDING_DEVICE=cpu
+      
+      # Performance settings
+      - CHUNK_SIZE=500
+      - CHUNK_OVERLAP=50
+      - RETRIEVAL_TOP_K=5
+      
+      # Logging
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./data:/app/data
+      - ./documents:/app/documents
+    networks:
+      - fichat-minimal
+    command: uvicorn src.api:app --host 0.0.0.0 --port 8000 --reload
+
+networks:
+  fichat-minimal:
+    driver: bridge
+
+# Usage:
+# 1. Ensure Ollama is running on host: ollama serve
+# 2. Pull a model: ollama pull phi
+# 3. Run: docker-compose -f docker-compose.local-minimal.yml up
+# 4. Access API at http://localhost:8000

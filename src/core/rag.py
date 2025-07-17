@@ -10,6 +10,8 @@ from .embeddings import BaseEmbeddings, SentenceTransformerEmbeddings
 from ..storage.base import BaseVectorStore, Document
 from ..storage.postgres_vector import PostgresVectorStore
 from ..storage.memory import InMemoryVectorStore
+from ..storage.sqlite_vector import SQLiteVectorStore
+from ..storage.chroma_vector import ChromaVectorStore
 from ..ingestion.chunkers import SemanticChunker, BaseChunker
 from ..ingestion.processors import DocumentProcessor
 from ..ingestion.loaders import PDFLoader, TextLoader, MarkdownLoader, JSONLoader, WebLoader
@@ -104,6 +106,14 @@ class RAG:
             )
         elif self.config.vector_store_type == "memory":
             return InMemoryVectorStore()
+        elif self.config.vector_store_type == "sqlite":
+            sqlite_config = self.config.vector_store_config.copy()
+            sqlite_config["embedding_dim"] = self.embeddings.embedding_dim
+            return SQLiteVectorStore(**sqlite_config)
+        elif self.config.vector_store_type == "chromadb":
+            chroma_config = self.config.vector_store_config.copy()
+            chroma_config["embedding_dim"] = self.embeddings.embedding_dim
+            return ChromaVectorStore(**chroma_config)
         else:
             raise ValueError(f"Unknown vector store type: {self.config.vector_store_type}")
     

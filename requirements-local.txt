@@ -1,0 +1,28 @@
+# Local deployment dependencies for fiChat-RAG
+# Install with: pip install -r requirements-local.txt
+
+# Include base requirements
+-r requirements.txt
+
+# Local vector database options
+chromadb>=0.4.0  # ChromaDB for local embedding database
+sqlite-vss>=0.1.2  # SQLite with vector similarity search
+
+# Optional: Additional local databases
+# qdrant-client>=1.7.0  # Qdrant in local mode
+# duckdb>=0.9.0  # DuckDB with vector extensions
+
+# Performance monitoring
+psutil>=5.9.0  # System resource monitoring
+
+# Configuration wizard dependencies
+click>=8.1.0  # CLI framework
+rich>=13.0.0  # Beautiful terminal output
+
+# Optional: GPU support
+# torch  # Already in base requirements
+# faiss-gpu>=1.7.0  # GPU-accelerated similarity search
+
+# Development tools for local testing
+httpx>=0.25.0  # HTTP client for testing
+python-multipart>=0.0.6  # File upload support
